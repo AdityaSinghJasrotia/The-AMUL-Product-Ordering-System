@@ -254,24 +254,24 @@
             border-radius: 2px;
         }
         
-        .voice-indicator {
+        .auto-redirect {
             display: flex;
             align-items: center;
             justify-content: center;
             margin-top: 15px;
             color: #666;
             font-size: clamp(0.8rem, 3vw, 0.9rem);
-            animation: pulseVoice 1.5s infinite;
+            animation: pulseRedirect 1.5s infinite;
             flex-wrap: wrap;
             gap: 5px;
         }
         
-        @keyframes pulseVoice {
+        @keyframes pulseRedirect {
             0%, 100% { opacity: 0.7; }
             50% { opacity: 1; }
         }
         
-        .voice-indicator i {
+        .auto-redirect i {
             margin-right: 6px;
             color: #4CAF50;
             font-size: 1em;
@@ -337,31 +337,6 @@
             transform: translateY(-1px);
         }
         
-        .mute-btn {
-            background: white;
-            color: #666;
-            border: 2px solid #ddd;
-            padding: clamp(12px, 4vw, 14px) 20px;
-            border-radius: 50px;
-            font-size: clamp(0.9rem, 3.5vw, 1rem);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            min-height: 46px;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        .mute-btn:hover, .mute-btn:active {
-            background: #f5f5f5;
-            border-color: #4CAF50;
-            color: #4CAF50;
-        }
-        
         /* Optimize for very small screens */
         @media (max-width: 350px) {
             .welcome-content {
@@ -402,7 +377,7 @@
                 left: 10px;
             }
             
-            .start-app-btn, .mute-btn {
+            .start-app-btn {
                 min-height: 44px;
             }
         }
@@ -458,7 +433,7 @@
                 gap: 15px;
             }
             
-            .start-app-btn, .mute-btn {
+            .start-app-btn {
                 width: auto;
                 min-width: 200px;
             }
@@ -2079,9 +2054,9 @@
                         <span class="name-highlight" id="typedName"></span>
                     </div>
                     
-                    <div class="voice-indicator" id="voiceIndicator">
-                        <i class="fas fa-microphone"></i>
-                        <span>Voice introduction is playing...</span>
+                    <div class="auto-redirect" id="autoRedirect">
+                        <i class="fas fa-clock"></i>
+                        <span>Opening store in <span id="countdown">5</span> seconds...</span>
                     </div>
                 </div>
             </div>
@@ -2090,10 +2065,6 @@
                 <button class="start-app-btn" id="startAppBtn">
                     <i class="fas fa-play-circle"></i>
                     Start Shopping Now
-                </button>
-                <button class="mute-btn" id="muteBtn">
-                    <i class="fas fa-volume-up"></i>
-                    Mute Voice
                 </button>
             </div>
         </div>
@@ -2314,9 +2285,9 @@
         const welcomeModal = document.getElementById('welcomeModal');
         const welcomePhoto = document.getElementById('welcomePhoto');
         const typedName = document.getElementById('typedName');
-        const voiceIndicator = document.getElementById('voiceIndicator');
+        const autoRedirect = document.getElementById('autoRedirect');
+        const countdownElement = document.getElementById('countdown');
         const startAppBtn = document.getElementById('startAppBtn');
-        const muteBtn = document.getElementById('muteBtn');
         const mainApp = document.getElementById('mainApp');
         
         const productsGrid = document.getElementById('productsGrid');
@@ -2368,8 +2339,8 @@
         let cachedProducts = null;
         let lastFetchTime = 0;
         const CACHE_DURATION = 30000; // 30 seconds cache
-        let isVoiceMuted = false;
-        let speechSynthesis = window.speechSynthesis;
+        let autoStartTimeout;
+        let countdown = 1; // Countdown from 5 seconds
         
         // Function to generate consistent price range for a product
         function generatePriceRange(basePrice) {
@@ -2415,10 +2386,8 @@
                     i++;
                 } else {
                     clearInterval(typingEffect);
-                    // Start voice introduction after typing completes
-                    if (!isVoiceMuted) {
-                        speakWelcomeMessage();
-                    }
+                    // Start countdown after typing completes
+                    startCountdown();
                 }
             }, 100);
             
@@ -2430,32 +2399,26 @@
             welcomeModal.offsetHeight;
         }
         
-        // Voice welcome message
-        function speakWelcomeMessage() {
-            if ('speechSynthesis' in window && !isVoiceMuted) {
-                const utterance = new SpeechSynthesisUtterance();
-                utterance.text = "Welcome to The AMUL Product Ordering System. I am here to take your orders. My name is Aditya Singh Jasrotia. Start shopping for premium AMUL products.";
-                utterance.rate = 1.0;
-                utterance.pitch = 1.0;
-                utterance.volume = 1.0;
-                utterance.lang = 'en-US';
+        // Start countdown timer
+        function startCountdown() {
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = countdown;
                 
-                // Show voice indicator
-                voiceIndicator.style.display = 'flex';
-                
-                utterance.onend = function() {
-                    // Hide voice indicator after speech ends
-                    setTimeout(() => {
-                        voiceIndicator.style.display = 'none';
-                    }, 500);
-                };
-                
-                speechSynthesis.speak(utterance);
-            }
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    startApplication();
+                }
+            }, 1000);
         }
         
         // Start the main application
         function startApplication() {
+            // Clear any existing timeout
+            if (autoStartTimeout) {
+                clearTimeout(autoStartTimeout);
+            }
+            
             // Hide welcome modal with animation
             welcomeModal.classList.add('hidden');
             
@@ -2463,11 +2426,6 @@
             setTimeout(() => {
                 welcomeModal.style.display = 'none';
                 mainApp.style.display = 'block';
-                
-                // Stop any ongoing speech
-                if (speechSynthesis.speaking) {
-                    speechSynthesis.cancel();
-                }
                 
                 // Trigger animations in main app
                 document.querySelector('header').style.animationPlayState = 'running';
@@ -2477,37 +2435,6 @@
                     searchBar.focus();
                 }, 300);
             }, 800);
-        }
-        
-        // Toggle voice mute
-        function toggleVoiceMute() {
-            isVoiceMuted = !isVoiceMuted;
-            const muteIcon = muteBtn.querySelector('i');
-            const muteText = muteBtn.querySelector('span') || document.createElement('span');
-            
-            if (isVoiceMuted) {
-                muteIcon.className = 'fas fa-volume-mute';
-                muteText.textContent = ' Unmute Voice';
-                
-                // Stop any ongoing speech
-                if (speechSynthesis.speaking) {
-                    speechSynthesis.cancel();
-                }
-                voiceIndicator.style.display = 'none';
-            } else {
-                muteIcon.className = 'fas fa-volume-up';
-                muteText.textContent = ' Mute Voice';
-                
-                // Speak welcome message again if muted was toggled during welcome
-                if (welcomeModal.style.display !== 'none') {
-                    speakWelcomeMessage();
-                }
-            }
-            
-            // Add text span if not already present
-            if (!muteBtn.querySelector('span')) {
-                muteBtn.appendChild(muteText);
-            }
         }
         
         // Set random logos for header and FAB button
@@ -3350,7 +3277,6 @@
         function setupEventListeners() {
             // Welcome screen buttons
             startAppBtn.addEventListener('click', startApplication);
-            muteBtn.addEventListener('click', toggleVoiceMute);
             
             // Brand filter buttons
             brandFilters.querySelectorAll('.filter-btn').forEach(btn => {
