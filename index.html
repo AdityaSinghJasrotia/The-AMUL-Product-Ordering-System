@@ -2340,7 +2340,8 @@
         let lastFetchTime = 0;
         const CACHE_DURATION = 30000; // 30 seconds cache
         let autoStartTimeout;
-        let countdown = 1; // Countdown from 5 seconds
+        let countdown = 5; // Countdown from 5 seconds
+        let cartCountdownInterval;
         
         // Function to generate consistent price range for a product
         function generatePriceRange(basePrice) {
@@ -2401,12 +2402,20 @@
         
         // Start countdown timer
         function startCountdown() {
-            const countdownInterval = setInterval(() => {
+            countdown = 5; // Reset to 5 seconds
+            countdownElement.textContent = countdown;
+            
+            // Clear any existing interval
+            if (cartCountdownInterval) {
+                clearInterval(cartCountdownInterval);
+            }
+            
+            cartCountdownInterval = setInterval(() => {
                 countdown--;
                 countdownElement.textContent = countdown;
                 
                 if (countdown <= 0) {
-                    clearInterval(countdownInterval);
+                    clearInterval(cartCountdownInterval);
                     startApplication();
                 }
             }, 1000);
@@ -2417,6 +2426,11 @@
             // Clear any existing timeout
             if (autoStartTimeout) {
                 clearTimeout(autoStartTimeout);
+            }
+            
+            // Clear any existing interval
+            if (cartCountdownInterval) {
+                clearInterval(cartCountdownInterval);
             }
             
             // Hide welcome modal with animation
@@ -2584,7 +2598,7 @@
                     const priceRange = generatePriceRange(drp);
                     
                     return {
-                        id: productName.replace(/\s+/g, '-').toLowerCase(),
+                        id: productName.replace(/\s+/g, '-').toLowerCase() + '-' + Math.random().toString(36).substr(2, 9),
                         name: productName,
                         brand: brand,
                         type: productType,
@@ -2624,6 +2638,7 @@
         
         // Render product type filters
         function renderTypeFilters() {
+            // Clear existing type filters except "All Types"
             while (typeFilters.children.length > 1) {
                 typeFilters.removeChild(typeFilters.lastChild);
             }
@@ -2664,8 +2679,8 @@
                 
                 const searchMatch = !searchQuery || 
                     product.name.toLowerCase().includes(searchQuery) || 
-                    product.brand.toLowerCase().includes(searchQuery) || 
-                    product.type.toLowerCase().includes(searchQuery);
+                    (product.brand && product.brand.toLowerCase().includes(searchQuery)) || 
+                    (product.type && product.type.toLowerCase().includes(searchQuery));
                 
                 return brandMatch && typeMatch && availabilityMatch && searchMatch;
             });
@@ -3288,7 +3303,7 @@
                 });
             });
             
-            // Type filter buttons
+            // Type filter buttons - FIXED EVENT DELEGATION
             typeFilters.addEventListener('click', (e) => {
                 if (e.target.classList.contains('filter-btn')) {
                     typeFilters.querySelector('.active').classList.remove('active');
@@ -3329,7 +3344,7 @@
             closeContact.addEventListener('click', closeContactModal);
             submitContactBtn.addEventListener('click', submitOrder);
             
-            // Overlay click
+            // Overlay click - FIXED: Only close if clicking directly on overlay
             overlay.addEventListener('click', (e) => {
                 if (e.target === overlay) {
                     closeCartPanel();
@@ -3340,7 +3355,7 @@
             });
             
             // Prevent clicks inside panels from closing them
-            [paymentModal, contactModal].forEach(panel => {
+            [paymentModal, contactModal, cartPanel].forEach(panel => {
                 panel.addEventListener('click', (e) => e.stopPropagation());
             });
             
