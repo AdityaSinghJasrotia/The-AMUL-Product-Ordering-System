@@ -875,10 +875,24 @@
             margin-bottom: 8px;
         }
         
-        .product-price {
+        .product-price-range {
             font-weight: 700;
             color: var(--success);
             font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 2px;
+        }
+        
+        .price-range-dash {
+            color: #666;
+        }
+        
+        .price-estimate {
+            font-size: 0.75rem;
+            color: #666;
+            font-style: italic;
         }
         
         .product-brand {
@@ -1175,11 +1189,18 @@
             max-height: 2.4em;
         }
         
-        .cart-item-price {
+        .cart-item-price-range {
             color: var(--success);
             font-weight: 600;
             margin-bottom: 8px;
             font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .cart-item-price-dash {
+            color: #666;
         }
         
         .cart-item-actions {
@@ -1263,6 +1284,12 @@
             font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 15px;
+        }
+        
+        .total-range {
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
         /* Cart buttons container */
@@ -1924,7 +1951,7 @@
                 font-size: 0.85rem;
             }
             
-            .cart-item-price {
+            .cart-item-price-range {
                 font-size: 0.85rem;
                 margin-bottom: 5px;
             }
@@ -2199,8 +2226,10 @@
                     </div>
                 </div>
                 <div class="cart-total">
-                    <span>Total:</span>
-                    <span id="cartTotal">₹0.00</span>
+                    <span>Total Range:</span>
+                    <div class="total-range" id="cartTotal">
+                        ₹0 - ₹0
+                    </div>
                 </div>
                 <div class="cart-buttons">
                     <button class="place-order-btn" id="placeOrderBtn">
@@ -2289,6 +2318,21 @@
         const CACHE_DURATION = 30000; // 30 seconds cache
         let isVoiceMuted = false;
         let speechSynthesis = window.speechSynthesis;
+        
+        // Function to generate consistent price range for a product
+        function generatePriceRange(basePrice) {
+            // Generate a random addition between 5 and 12 rupees
+            // Use a seed based on the product name for consistency
+            const randomAddition = Math.floor(Math.random() * 8) + 5; // 5 to 12
+            const lowerPrice = parseFloat(basePrice);
+            const upperPrice = lowerPrice + randomAddition;
+            
+            return {
+                lower: lowerPrice,
+                upper: upperPrice,
+                rangeText: `₹${lowerPrice.toFixed(2)} - ₹${upperPrice.toFixed(2)}`
+            };
+        }
         
         // Initialize the app
         function init() {
@@ -2558,6 +2602,9 @@
                     const drp = parseFloat(row.DRP || row.Price || row._values[4] || 0) || 0;
                     const mrp = parseFloat(row.MRP || row._values[5] || drp) || 0;
                     
+                    // Generate price range
+                    const priceRange = generatePriceRange(drp);
+                    
                     return {
                         id: productName.replace(/\s+/g, '-').toLowerCase(),
                         name: productName,
@@ -2568,7 +2615,8 @@
                         imageUrl: imageUrl,
                         drp: drp,
                         mrp: mrp,
-                        margin: parseFloat(row.Margin) || 0
+                        margin: parseFloat(row.Margin) || 0,
+                        priceRange: priceRange
                     };
                 }).filter(product => product.name); // Remove empty products
                 
@@ -2712,7 +2760,10 @@
                     <div class="product-info">
                         <div class="product-name">${product.name}</div>
                         <div class="product-prices">
-                            <span class="product-price">₹${product.drp.toFixed(2)}</span>
+                            <div class="product-price-range">
+                                ${product.priceRange.rangeText}
+                            </div>
+                            <div class="price-estimate">Price may vary slightly</div>
                         </div>
                         <div class="product-brand">
                             ${product.brand === 'AMUL' || product.brand.toUpperCase() === 'AMUL'
@@ -2762,8 +2813,7 @@
                 cart.push({
                     id: productId,
                     name: product.name,
-                    price: product.drp,
-                    mrp: product.mrp,
+                    priceRange: product.priceRange,
                     quantity: 1,
                     imageUrl: product.imageUrl,
                     maxStock: product.rob
@@ -2806,12 +2856,39 @@
             localStorage.setItem('cart', JSON.stringify(cart));
             updateCartCount();
             renderCartItems();
+            updateCartTotal();
         }
         
         // Update cart count badge
         function updateCartCount() {
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
             cartCount.textContent = totalItems;
+        }
+        
+        // Update cart total range
+        function updateCartTotal() {
+            let totalLower = 0;
+            let totalUpper = 0;
+            
+            cart.forEach(item => {
+                totalLower += item.priceRange.lower * item.quantity;
+                totalUpper += item.priceRange.upper * item.quantity;
+            });
+            
+            // Format the total range
+            const totalRangeText = `₹${totalLower.toFixed(2)} - ₹${totalUpper.toFixed(2)}`;
+            cartTotal.innerHTML = totalRangeText;
+            
+            // Show min order notification
+            if (totalLower < 1) {
+                minOrderNotification.style.display = 'block';
+                placeOrderBtn.disabled = true;
+                payNowBtn.disabled = true;
+            } else {
+                minOrderNotification.style.display = 'none';
+                placeOrderBtn.disabled = false;
+                payNowBtn.disabled = false;
+            }
         }
         
         // Render cart items with direct quantity input
@@ -2826,22 +2903,15 @@
                         <p>Add some products to your cart</p>
                     </div>
                 `;
-                cartTotal.textContent = '₹0.00';
-                minOrderNotification.style.display = 'none';
-                placeOrderBtn.disabled = false;
-                payNowBtn.disabled = false;
+                updateCartTotal();
                 return;
             }
             
-            let total = 0;
             const fragment = document.createDocumentFragment();
             
             cart.forEach(item => {
                 const product = products.find(p => p.id === item.id);
                 if (!product) return;
-                
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
                 
                 const remainingStock = product.rob - item.quantity;
                 
@@ -2864,7 +2934,9 @@
                     </div>
                     <div class="cart-item-details">
                         <div class="cart-item-name">${item.name}</div>
-                        <div class="cart-item-price">₹${item.price.toFixed(2)}</div>
+                        <div class="cart-item-price-range">
+                            ₹${item.priceRange.lower.toFixed(2)} <span class="cart-item-price-dash">-</span> ₹${item.priceRange.upper.toFixed(2)}
+                        </div>
                         <div class="cart-item-actions">
                             <button class="quantity-btn minus" data-id="${item.id}">-</button>
                             <input type="number" class="quantity-input" data-id="${item.id}" value="${item.quantity}" min="1" max="${product.rob}" step="1">
@@ -2879,19 +2951,6 @@
             });
             
             cartItems.appendChild(fragment);
-            
-            cartTotal.textContent = `₹${total.toFixed(2)}`;
-            
-            // Show min order notification
-            if (total < 1) {
-                minOrderNotification.style.display = 'block';
-                placeOrderBtn.disabled = true;
-                payNowBtn.disabled = true;
-            } else {
-                minOrderNotification.style.display = 'none';
-                placeOrderBtn.disabled = false;
-                payNowBtn.disabled = false;
-            }
             
             // Add event listeners to cart item controls
             document.querySelectorAll('.minus').forEach(btn => {
@@ -2994,12 +3053,16 @@
                 return;
             }
             
-            let total = 0;
+            // Calculate total range
+            let totalLower = 0;
+            let totalUpper = 0;
+            
             cart.forEach(item => {
-                total += item.price * item.quantity;
+                totalLower += item.priceRange.lower * item.quantity;
+                totalUpper += item.priceRange.upper * item.quantity;
             });
             
-            if (total < 1) {
+            if (totalLower < 1) {
                 alert('Minimum order value is ₹1. Please add more items to your cart.');
                 return;
             }
@@ -3048,16 +3111,17 @@
             customerNameInput.classList.remove('error');
             customerPhoneInput.classList.remove('error');
             
-            // Calculate total
-            let total = 0;
+            // Calculate total range
+            let totalLower = 0;
+            let totalUpper = 0;
             
             cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
+                totalLower += item.priceRange.lower * item.quantity;
+                totalUpper += item.priceRange.upper * item.quantity;
             });
             
             // Create WhatsApp message
-            const whatsappMessage = createWhatsAppMessage(customerName, customerPhone, total);
+            const whatsappMessage = createWhatsAppMessage(customerName, customerPhone, totalLower, totalUpper);
             
             // Encode the message for URL
             const encodedMessage = encodeURIComponent(whatsappMessage);
@@ -3081,8 +3145,8 @@
             }, 500);
         }
         
-        // Create formatted WhatsApp message
-        function createWhatsAppMessage(customerName, customerPhone, total) {
+        // Create formatted WhatsApp message with price ranges
+        function createWhatsAppMessage(customerName, customerPhone, totalLower, totalUpper) {
             let message = `*NEW ORDER - AMUL PRODUCTS*\n\n`;
             message += `*Customer Details:*\n`;
             message += `Name: ${customerName}\n`;
@@ -3091,17 +3155,19 @@
             message += `────────────────\n`;
             
             cart.forEach((item, index) => {
-                const itemTotal = item.price * item.quantity;
+                const itemLowerTotal = item.priceRange.lower * item.quantity;
+                const itemUpperTotal = item.priceRange.upper * item.quantity;
                 message += `${index + 1}. ${item.name}\n`;
                 message += `   Quantity: ${item.quantity}\n`;
-                message += `   Price: ₹${item.price.toFixed(2)} each\n`;
-                message += `   Total: ₹${itemTotal.toFixed(2)}\n`;
+                message += `   Price Range: ₹${item.priceRange.lower.toFixed(2)} - ₹${item.priceRange.upper.toFixed(2)} each\n`;
+                message += `   Total Range: ₹${itemLowerTotal.toFixed(2)} - ₹${itemUpperTotal.toFixed(2)}\n`;
                 message += `────────────────\n`;
             });
             
             message += `\n*Order Summary:*\n`;
             message += `Total Items: ${cart.reduce((sum, item) => sum + item.quantity, 0)}\n`;
-            message += `Grand Total: *₹${total.toFixed(2)}*\n\n`;
+            message += `Grand Total Range: *₹${totalLower.toFixed(2)} - ₹${totalUpper.toFixed(2)}*\n\n`;
+            message += `*Note:* Final price will be confirmed based on exact product availability and delivery location.\n\n`;
             message += `*Delivery Address:* To be confirmed with customer\n`;
             message += `*Payment Method:* To be confirmed with customer\n\n`;
             message += `_This order was placed by Amul Products Ordering System_`;
@@ -3116,12 +3182,13 @@
                 return;
             }
             
-            let total = 0;
+            // Calculate total lower bound
+            let totalLower = 0;
             cart.forEach(item => {
-                total += item.price * item.quantity;
+                totalLower += item.priceRange.lower * item.quantity;
             });
             
-            if (total < 1) {
+            if (totalLower < 1) {
                 alert('Minimum order value is ₹1. Please add more items to your cart.');
                 return;
             }
