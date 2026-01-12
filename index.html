@@ -10,7 +10,7 @@
       gtag('config', 'G-F0JZK618J3');
     </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#4CAF50">
     <meta name="description" content="AMUL Product Ordering System - Jammu">
     <title>The AMUL Product Ordering System</title>
@@ -44,6 +44,15 @@
             padding-bottom: 80px;
             -webkit-tap-highlight-color: transparent;
             -webkit-font-smoothing: antialiased;
+            touch-action: manipulation;
+        }
+        
+        /* Prevent body scroll when modal is open */
+        body.no-scroll {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
         }
         
         /* Header Styles */
@@ -141,10 +150,12 @@
             padding: 8px;
             border-radius: 50%;
             background: rgba(76, 175, 80, 0.1);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
         
-        .cart-icon:hover {
-            transform: rotate(-10deg);
+        .cart-icon:active {
+            transform: scale(0.95);
         }
         
         .cart-count {
@@ -199,6 +210,8 @@
             transition: all 0.3s ease;
             box-shadow: var(--shadow);
             background: white;
+            -webkit-appearance: none;
+            touch-action: manipulation;
         }
         
         .search-bar:focus {
@@ -229,11 +242,12 @@
             transition: transform 0.3s ease;
             padding: 5px;
             border-radius: 50%;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
         
-        .search-clear:hover {
-            transform: rotate(90deg) scale(1.1);
-            background: rgba(0,0,0,0.05);
+        .search-clear:active {
+            transform: scale(0.9);
         }
         
         /* Filters Section */
@@ -278,11 +292,12 @@
             cursor: pointer;
             transition: all 0.2s ease;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
         
-        .filter-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        .filter-btn:active {
+            transform: scale(0.95);
         }
         
         .filter-btn.active {
@@ -317,6 +332,7 @@
             transform: translateY(20px);
             animation: cardAppear 0.6s forwards;
             will-change: transform;
+            -webkit-tap-highlight-color: transparent;
         }
         
         @keyframes cardAppear {
@@ -335,9 +351,8 @@
         .product-card:nth-child(7) { animation-delay: 0.7s; }
         .product-card:nth-child(8) { animation-delay: 0.8s; }
         
-        .product-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        .product-card:active {
+            transform: scale(0.98);
         }
         
         .out-of-stock {
@@ -413,10 +428,6 @@
             will-change: transform;
         }
         
-        .product-image:hover img {
-            transform: scale(1.05);
-        }
-        
         .product-info {
             padding: 12px;
         }
@@ -474,6 +485,12 @@
             position: relative;
             overflow: hidden;
             font-weight: 500;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        
+        .add-to-cart:active {
+            transform: scale(0.95);
         }
         
         .add-to-cart::after {
@@ -488,10 +505,6 @@
             transition: all 0.6s;
         }
         
-        .add-to-cart:hover::after {
-            left: 120%;
-        }
-        
         .add-to-cart:disabled {
             background: #ccc;
             cursor: not-allowed;
@@ -499,10 +512,6 @@
         
         .add-to-cart i {
             margin-right: 5px;
-        }
-        
-        .add-to-cart:hover:not(:disabled) {
-            background: #388e3c;
         }
         
         /* Floating Action Buttons */
@@ -515,7 +524,7 @@
         
         .fab-buttons {
             position: absolute;
-            bottom: 60px;
+            bottom: 80px;
             right: 0;
             display: flex;
             flex-direction: column;
@@ -548,6 +557,8 @@
             text-decoration: none;
             animation: float 3s ease-in-out infinite;
             border: 2px solid white;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
         
         .fab-button.call {
@@ -561,10 +572,8 @@
         .fab-button:nth-child(1) { animation-delay: 0.1s; }
         .fab-button:nth-child(2) { animation-delay: 0.2s; }
         
-        .fab-button:hover {
-            transform: translateY(-3px);
-            animation: none;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        .fab-button:active {
+            transform: scale(0.9);
         }
         
         .fab-button::after {
@@ -583,26 +592,33 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
         
-        .fab-button:hover::after {
-            opacity: 1;
-        }
-        
+        /* FAB Main Button with clear, large person image */
         .fab-main {
-            width: 60px;
-            height: 60px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.3);
             transition: all 0.3s;
             animation: float 3s ease-in-out infinite;
-            background-size: 70%;
+            background-color: white;
+            border: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            overflow: hidden;
+            position: relative;
+            background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            border: 3px solid white;
-            background-color: white;
+            border: 4px solid white;
+        }
+        
+        .fab-main:active {
+            transform: scale(0.9);
+            animation: none;
         }
         
         @keyframes float {
@@ -611,13 +627,7 @@
             100% { transform: translateY(0px); }
         }
         
-        .fab-main:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.35);
-            animation: none;
-        }
-        
-        /* Cart Panel */
+        /* Cart Panel - Fixed for mobile */
         .cart-panel {
             position: fixed;
             top: 0;
@@ -629,6 +639,8 @@
             transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             display: flex;
             flex-direction: column;
+            transform: translate3d(0, 0, 0);
+            -webkit-overflow-scrolling: touch;
         }
         
         .cart-panel.active {
@@ -647,20 +659,48 @@
             z-index: 10;
         }
         
+        /* Fixed Close Cart Button with better positioning and hover animation */
         .close-cart {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             color: #86868b;
             cursor: pointer;
-            transition: transform 0.3s ease;
-            padding: 5px;
+            transition: all 0.3s ease;
+            padding: 8px 12px;
             border-radius: 50%;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
         
         .close-cart:hover {
-            transform: rotate(90deg);
-            background: rgba(0,0,0,0.05);
+            background: rgba(0, 0, 0, 0.05);
+            transform: rotate(90deg) scale(1.1);
+        }
+        
+        .close-cart:active {
+            transform: rotate(90deg) scale(0.95);
+        }
+        
+        .close-cart::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.05);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .close-cart:hover::before {
+            opacity: 1;
         }
         
         .cart-items {
@@ -668,6 +708,7 @@
             padding: 10px 15px;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
         }
         
         .cart-item {
@@ -675,10 +716,11 @@
             padding: 10px 0;
             border-bottom: 1px solid var(--border);
             transition: background 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
         }
         
-        .cart-item:hover {
-            background: rgba(0,0,0,0.02);
+        .cart-item:active {
+            background: rgba(0,0,0,0.05);
         }
         
         .cart-item-image {
@@ -747,21 +789,17 @@
             justify-content: center;
             transition: all 0.2s ease;
             flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
         
-        .quantity-btn:hover {
-            background: var(--primary);
-            color: white;
+        .quantity-btn:active {
+            transform: scale(0.9);
         }
         
         .quantity-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-        }
-        
-        .quantity-btn:disabled:hover {
-            background: var(--secondary);
-            color: var(--text);
         }
         
         .quantity-input {
@@ -776,11 +814,11 @@
             outline: none;
             transition: border-color 0.3s;
             background: white;
+            touch-action: manipulation;
         }
         
         .quantity-input:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
         }
         
         .remove-item {
@@ -794,11 +832,12 @@
             flex-shrink: 0;
             padding: 5px;
             border-radius: 50%;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
         
-        .remove-item:hover {
-            transform: scale(1.2);
-            background: rgba(220, 53, 69, 0.1);
+        .remove-item:active {
+            transform: scale(0.9);
         }
         
         .cart-footer {
@@ -830,155 +869,52 @@
             gap: 12px;
         }
         
+        .place-order-btn, .pay-now-btn, .clear-cart-btn {
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        
+        .place-order-btn:active, .pay-now-btn:active, .clear-cart-btn:active {
+            transform: scale(0.98);
+        }
+        
         .place-order-btn {
             flex: 2;
             background: var(--success);
             color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
         }
         
-        .place-order-btn::after {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -60%;
-            width: 20px;
-            height: 200%;
-            background: rgba(255,255,255,0.3);
-            transform: rotate(25deg);
-            transition: all 0.6s;
-        }
-        
-        .place-order-btn:hover::after {
-            left: 120%;
-        }
-        
-        .place-order-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-        
-        .place-order-btn i {
-            margin-right: 8px;
-            font-size: 1.1rem;
-        }
-        
-        .place-order-btn:hover:not(:disabled) {
-            background: #218838;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(33, 136, 56, 0.3);
-        }
-        
-        /* Pay Now button */
         .pay-now-btn {
             flex: 1;
             background: #9c27b0;
             color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
         }
         
-        .pay-now-btn::after {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -60%;
-            width: 20px;
-            height: 200%;
-            background: rgba(255,255,255,0.3);
-            transform: rotate(25deg);
-            transition: all 0.6s;
-        }
-        
-        .pay-now-btn:hover::after {
-            left: 120%;
-        }
-        
-        .pay-now-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-        
-        .pay-now-btn i {
-            margin-right: 8px;
-            font-size: 1.1rem;
-        }
-        
-        .pay-now-btn:hover:not(:disabled) {
-            background: #7b1fa2;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(123, 31, 162, 0.3);
-        }
-        
-        /* Clear Cart button */
         .clear-cart-btn {
             background: var(--danger);
             color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
         }
         
-        .clear-cart-btn::after {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -60%;
-            width: 20px;
-            height: 200%;
-            background: rgba(255,255,255,0.3);
-            transform: rotate(25deg);
-            transition: all 0.6s;
-        }
-        
-        .clear-cart-btn:hover::after {
-            left: 120%;
-        }
-        
-        .clear-cart-btn:disabled {
+        .place-order-btn:disabled, .pay-now-btn:disabled, .clear-cart-btn:disabled {
             background: #ccc;
             cursor: not-allowed;
         }
         
-        .clear-cart-btn i {
+        .place-order-btn i, .pay-now-btn i, .clear-cart-btn i {
             margin-right: 8px;
             font-size: 1.1rem;
-        }
-        
-        .clear-cart-btn:hover:not(:disabled) {
-            background: #c82333;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(200, 35, 51, 0.3);
         }
         
         .overlay {
@@ -992,6 +928,8 @@
             display: none;
             opacity: 0;
             transition: opacity 0.4s ease;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
         
         .overlay.active {
@@ -1063,11 +1001,12 @@
             transition: transform 0.3s ease;
             padding: 5px 10px;
             border-radius: 20px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
         
-        .refresh-btn:hover {
-            transform: rotate(90deg);
-            background: rgba(76, 175, 80, 0.1);
+        .refresh-btn:active {
+            transform: rotate(90deg) scale(0.9);
         }
         
         .refresh-btn i {
@@ -1075,7 +1014,7 @@
         }
         
         /* Payment Modal */
-        .payment-modal {
+        .payment-modal, .contact-modal {
             position: fixed;
             top: 0;
             left: 0;
@@ -1089,42 +1028,47 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
+            padding: 15px;
         }
         
-        .payment-modal.active {
+        .payment-modal.active, .contact-modal.active {
             opacity: 1;
             visibility: visible;
         }
         
-        .payment-content {
+        .payment-content, .contact-content {
             background: white;
             border-radius: var(--card-radius);
-            width: 90%;
+            width: 100%;
             max-width: 400px;
             padding: 25px;
             text-align: center;
             transform: translateY(20px);
             transition: transform 0.3s ease;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
-        .payment-modal.active .payment-content {
+        .payment-modal.active .payment-content,
+        .contact-modal.active .contact-content {
             transform: translateY(0);
         }
         
-        .payment-header {
+        .payment-header, .contact-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
         
-        .payment-header h2 {
+        .payment-header h2, .contact-header h2 {
             color: var(--primary);
             font-size: 1.5rem;
         }
         
-        .close-payment {
+        .close-payment, .close-contact {
             background: none;
             border: none;
             font-size: 1.5rem;
@@ -1133,11 +1077,12 @@
             transition: transform 0.3s ease;
             padding: 5px;
             border-radius: 50%;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
         
-        .close-payment:hover {
-            transform: rotate(90deg);
-            background: rgba(0,0,0,0.05);
+        .close-payment:active, .close-contact:active {
+            transform: rotate(90deg) scale(0.9);
         }
         
         .qr-container {
@@ -1170,11 +1115,11 @@
             color: var(--text);
         }
         
-        .copy-btn {
+        .copy-btn, .submit-contact-btn {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px;
             border-radius: 8px;
             font-size: 1rem;
             cursor: pointer;
@@ -1185,15 +1130,15 @@
             margin: 0 auto;
             width: 100%;
             max-width: 200px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
         
-        .copy-btn:hover {
-            background: #388e3c;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(56, 142, 60, 0.3);
+        .copy-btn:active, .submit-contact-btn:active {
+            transform: scale(0.98);
         }
         
-        .copy-btn i {
+        .copy-btn i, .submit-contact-btn i {
             margin-right: 8px;
         }
         
@@ -1323,72 +1268,6 @@
             }
         }
         
-        /* Contact Details Modal */
-        .contact-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 300;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .contact-modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .contact-content {
-            background: white;
-            border-radius: var(--card-radius);
-            width: 90%;
-            max-width: 500px;
-            padding: 25px;
-            text-align: center;
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .contact-modal.active .contact-content {
-            transform: translateY(0);
-        }
-        
-        .contact-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .contact-header h2 {
-            color: var(--primary);
-            font-size: 1.5rem;
-        }
-        
-        .close-contact {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #86868b;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            padding: 5px;
-            border-radius: 50%;
-        }
-        
-        .close-contact:hover {
-            transform: rotate(90deg);
-            background: rgba(0,0,0,0.05);
-        }
-        
         .form-group {
             margin-bottom: 20px;
             text-align: left;
@@ -1413,56 +1292,16 @@
             font-size: 1rem;
             transition: border-color 0.3s;
             background: white;
+            touch-action: manipulation;
         }
         
         .contact-input:focus {
             border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
         }
         
         .contact-input.error {
             border-color: var(--danger);
-        }
-        
-        .submit-contact-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-block;
-            width: 100%;
-            margin-top: 10px;
-        }
-        
-        .submit-contact-btn:hover {
-            background: #388e3c;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(56, 142, 60, 0.3);
-        }
-        
-        /* Order confirmation */
-        .order-confirmation {
-            text-align: center;
-            padding: 30px;
-        }
-        
-        .order-confirmation i {
-            font-size: 4rem;
-            color: var(--success);
-            margin-bottom: 20px;
-            animation: pulseSuccess 1.5s infinite;
-        }
-        
-        @keyframes pulseSuccess {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
         }
         
         /* Install Prompt */
@@ -1513,34 +1352,30 @@
             gap: 10px;
         }
         
-        .install-btn {
-            background: white;
-            color: #667eea;
-            border: none;
+        .install-btn, .dismiss-btn {
             padding: 8px 15px;
             border-radius: 20px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            border: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
         
-        .install-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255,255,255,0.3);
+        .install-btn:active, .dismiss-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .install-btn {
+            background: white;
+            color: #667eea;
         }
         
         .dismiss-btn {
             background: transparent;
             color: white;
             border: 1px solid rgba(255,255,255,0.3);
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .dismiss-btn:hover {
-            background: rgba(255,255,255,0.1);
         }
         
         /* App Sync Notification */
@@ -1600,6 +1435,16 @@
             
             .cart-action-buttons {
                 flex-direction: row;
+            }
+            
+            .fab-main {
+                width: 90px;
+                height: 90px;
+                border-width: 5px;
+            }
+            
+            .fab-buttons {
+                bottom: 110px;
             }
         }
         
@@ -1693,6 +1538,65 @@
             .install-actions {
                 justify-content: center;
             }
+            
+            /* Improved mobile cart panel */
+            .cart-panel {
+                width: 100%;
+            }
+            
+            .close-cart {
+                padding: 12px;
+                font-size: 1.8rem;
+                width: 45px;
+                height: 45px;
+            }
+            
+            .fab-main {
+                width: 70px;
+                height: 70px;
+                bottom: 25px;
+                right: 25px;
+                border-width: 3px;
+            }
+            
+            .fab-buttons {
+                bottom: 95px;
+            }
+        }
+        
+        /* Fix for iOS Safari */
+        @supports (-webkit-touch-callout: none) {
+            .cart-items {
+                padding-bottom: 100px;
+            }
+            
+            .cart-footer {
+                padding-bottom: max(12px, env(safe-area-inset-bottom));
+            }
+            
+            .fab-container {
+                bottom: max(20px, env(safe-area-inset-bottom));
+            }
+            
+            .fab-main {
+                background-size: contain;
+                background-position: center;
+            }
+        }
+        
+        /* High contrast for better visibility */
+        .fab-main {
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+            background-color: transparent;
+        }
+        
+        /* Ensure FAB image is clearly visible */
+        .fab-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
         }
     </style>
 </head>
@@ -1928,9 +1832,10 @@
         const APP_VERSION = '2.0';
         const STORAGE_KEY = 'amul_ordering_app_data';
         
-        // Logo images array
+        // Logo images array - Make sure these images exist in your directory
         const LOGO_IMAGES = ['asj.png', 'asj1.png', 'asj2.png'];
-        const FAB_BACKGROUNDS = ['#4CAF50', '#2196F3', '#9C27B0', '#FF9800'];
+        // FAB Person Image - Use a dedicated person image for FAB button
+        const FAB_PERSON_IMAGE = 'asj.png'; // Use the main person image
         
         // DOM Elements
         const productsGrid = document.getElementById('productsGrid');
@@ -1985,13 +1890,15 @@
         let searchQuery = '';
         let cachedProducts = null;
         let lastFetchTime = 0;
-        const CACHE_DURATION = 30000; // 30 seconds cache
+        const CACHE_DURATION = 30000;
         let deferredPrompt = null;
         let isAppInstalled = false;
+        let isCartOpen = false;
         
         // Initialize the app
         function init() {
             setRandomLogos();
+            setFabPersonImage();
             updateLastUpdated();
             loadProducts();
             updateCartCount();
@@ -2006,24 +1913,25 @@
             setTimeout(showInstallPrompt, 5000);
         }
         
-        // Set random logos for header and FAB button
+        // Set random logos for header
         function setRandomLogos() {
-            // Get random indices for logos
-            let headerLogoIndex = Math.floor(Math.random() * LOGO_IMAGES.length);
-            let fabBackgroundIndex = Math.floor(Math.random() * FAB_BACKGROUNDS.length);
+            // Get random index for logo
+            let logoIndex = Math.floor(Math.random() * LOGO_IMAGES.length);
             
             // Set header logo
-            mainLogo.src = LOGO_IMAGES[headerLogoIndex];
-            mainLogo.alt = `ASJ Logo ${headerLogoIndex + 1}`;
-            
-            // Set FAB button background color and image
-            fabMain.style.backgroundImage = `url('${LOGO_IMAGES[headerLogoIndex]}')`;
-            fabMain.style.backgroundColor = FAB_BACKGROUNDS[fabBackgroundIndex];
-            fabMain.style.backgroundSize = '60%';
-            fabMain.style.backgroundRepeat = 'no-repeat';
+            mainLogo.src = LOGO_IMAGES[logoIndex];
+            mainLogo.alt = `ASJ Logo ${logoIndex + 1}`;
+        }
+        
+        // Set FAB button with person image
+        function setFabPersonImage() {
+            // Set FAB button with person image - using the dedicated person image
+            fabMain.style.backgroundImage = `url('${FAB_PERSON_IMAGE}')`;
+            fabMain.style.backgroundSize = 'cover';
             fabMain.style.backgroundPosition = 'center';
+            fabMain.style.backgroundColor = 'transparent';
             
-            // Set small FAB buttons to solid colors without images
+            // Set small FAB buttons to solid colors
             callFab.style.backgroundColor = 'var(--primary)';
             paymentFab.style.backgroundColor = '#9c27b0';
         }
@@ -2052,16 +1960,6 @@
                     console.log('Service Worker registration failed:', error);
                 });
             }
-            
-            // Setup Broadcast Channel for cross-tab communication
-            const broadcastChannel = new BroadcastChannel('amul_ordering_channel');
-            broadcastChannel.onmessage = (event) => {
-                if (event.data.type === 'cart_update') {
-                    cart = event.data.cart;
-                    updateCart();
-                    showSyncNotification();
-                }
-            };
         }
         
         // Show install prompt
@@ -2454,6 +2352,13 @@
                     const productId = e.target.closest('.add-to-cart').dataset.id;
                     addToCart(productId);
                 });
+                
+                // Add touch event for mobile
+                btn.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    const productId = e.target.closest('.add-to-cart').dataset.id;
+                    addToCart(productId);
+                }, { passive: false });
             });
         }
         
@@ -2491,15 +2396,6 @@
             
             // Save preferences
             saveUserPreferences();
-            
-            // Broadcast cart update to other tabs
-            if (typeof BroadcastChannel !== 'undefined') {
-                const broadcastChannel = new BroadcastChannel('amul_ordering_channel');
-                broadcastChannel.postMessage({
-                    type: 'cart_update',
-                    cart: cart
-                });
-            }
         }
         
         // Show added to cart animation
@@ -2749,7 +2645,7 @@
             
             contactModal.classList.add('active');
             overlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            document.body.classList.add('no-scroll');
             
             resetContactForm();
         }
@@ -2888,40 +2784,56 @@
             showPaymentModal();
         }
         
-        // Show cart panel
-        function showCartPanel() {
+        // Show cart panel - FIXED FOR MOBILE
+        function showCartPanel(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
             cartPanel.classList.add('active');
             overlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            document.body.classList.add('no-scroll');
+            isCartOpen = true;
+            fabButtons.classList.remove('show');
         }
         
-        // Close cart panel
-        function closeCartPanel() {
+        // Close cart panel - FIXED FOR MOBILE
+        function closeCartPanel(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
             cartPanel.classList.remove('active');
             overlay.classList.remove('active');
-            document.body.style.overflow = '';
+            document.body.classList.remove('no-scroll');
+            isCartOpen = false;
         }
         
         // Show payment modal
-        function showPaymentModal() {
+        function showPaymentModal(e) {
+            if (e) e.preventDefault();
             paymentModal.classList.add('active');
             overlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            document.body.classList.add('no-scroll');
             fabButtons.classList.remove('show');
         }
         
         // Close payment modal
-        function closePaymentModal() {
+        function closePaymentModal(e) {
+            if (e) e.preventDefault();
             paymentModal.classList.remove('active');
             overlay.classList.remove('active');
-            document.body.style.overflow = '';
+            document.body.classList.remove('no-scroll');
         }
         
         // Close contact modal
-        function closeContactModal() {
+        function closeContactModal(e) {
+            if (e) e.preventDefault();
             contactModal.classList.remove('active');
             overlay.classList.remove('active');
-            document.body.style.overflow = '';
+            document.body.classList.remove('no-scroll');
         }
         
         // Copy UPI ID to clipboard
@@ -2947,21 +2859,33 @@
             lastUpdated.textContent = `Last updated: ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
         }
         
-        // Setup event listeners
+        // Setup event listeners - FIXED FOR MOBILE
         function setupEventListeners() {
             // Brand filter buttons
             brandFilters.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
                     brandFilters.querySelector('.active').classList.remove('active');
                     btn.classList.add('active');
                     selectedBrand = btn.dataset.brand;
                     renderProducts();
                     saveUserPreferences();
                 });
+                
+                // Touch events for mobile
+                btn.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    brandFilters.querySelector('.active').classList.remove('active');
+                    btn.classList.add('active');
+                    selectedBrand = btn.dataset.brand;
+                    renderProducts();
+                    saveUserPreferences();
+                }, { passive: false });
             });
             
             // Type filter buttons
             typeFilters.addEventListener('click', (e) => {
+                e.preventDefault();
                 if (e.target.classList.contains('filter-btn')) {
                     typeFilters.querySelector('.active').classList.remove('active');
                     e.target.classList.add('active');
@@ -2973,38 +2897,85 @@
             
             // Availability filter buttons
             availabilityFilters.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
                     availabilityFilters.querySelector('.active').classList.remove('active');
                     btn.classList.add('active');
                     selectedAvailability = btn.dataset.availability;
                     renderProducts();
                     saveUserPreferences();
                 });
+                
+                // Touch events for mobile
+                btn.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    availabilityFilters.querySelector('.active').classList.remove('active');
+                    btn.classList.add('active');
+                    selectedAvailability = btn.dataset.availability;
+                    renderProducts();
+                    saveUserPreferences();
+                }, { passive: false });
             });
             
-            // Cart interactions
+            // Cart interactions - FIXED FOR MOBILE
             cartIcon.addEventListener('click', showCartPanel);
+            cartIcon.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                showCartPanel(e);
+            }, { passive: false });
+            
             closeCart.addEventListener('click', closeCartPanel);
+            closeCart.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                closeCartPanel(e);
+            }, { passive: false });
+            
             placeOrderBtn.addEventListener('click', placeOrder);
             payNowBtn.addEventListener('click', payNow);
             clearCartBtn.addEventListener('click', clearCart);
             
             // FAB interactions
-            fabMain.addEventListener('click', () => {
+            fabMain.addEventListener('click', (e) => {
+                e.preventDefault();
                 fabButtons.classList.toggle('show');
             });
             
+            fabMain.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                fabButtons.classList.toggle('show');
+            }, { passive: false });
+            
             // Payment interactions
             paymentFab.addEventListener('click', showPaymentModal);
+            paymentFab.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                showPaymentModal(e);
+            }, { passive: false });
+            
             closePayment.addEventListener('click', closePaymentModal);
+            closePayment.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                closePaymentModal(e);
+            }, { passive: false });
+            
             copyUpiBtn.addEventListener('click', copyUpiId);
             
             // Contact modal interactions
             closeContact.addEventListener('click', closeContactModal);
-            submitContactBtn.addEventListener('click', submitOrder);
+            closeContact.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                closeContactModal(e);
+            }, { passive: false });
             
-            // Overlay click
+            submitContactBtn.addEventListener('click', submitOrder);
+            submitContactBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                submitOrder();
+            }, { passive: false });
+            
+            // Overlay click - FIXED FOR MOBILE
             overlay.addEventListener('click', (e) => {
+                e.preventDefault();
                 if (e.target === overlay) {
                     closeCartPanel();
                     closePaymentModal();
@@ -3013,18 +2984,38 @@
                 }
             });
             
+            overlay.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (e.target === overlay) {
+                    closeCartPanel();
+                    closePaymentModal();
+                    closeContactModal();
+                    fabButtons.classList.remove('show');
+                }
+            }, { passive: false });
+            
             // Prevent clicks inside panels from closing them
-            [paymentModal, contactModal].forEach(panel => {
+            [paymentModal, contactModal, cartPanel].forEach(panel => {
                 panel.addEventListener('click', (e) => e.stopPropagation());
+                panel.addEventListener('touchstart', (e) => e.stopPropagation());
             });
             
             // Refresh button with fast reload and logo rotation
-            refreshBtn.addEventListener('click', () => {
+            refreshBtn.addEventListener('click', (e) => {
+                e.preventDefault();
                 cachedProducts = null;
                 setRandomLogos();
                 loadProducts();
                 showNotification('Products refreshed', 'success');
             });
+            
+            refreshBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                cachedProducts = null;
+                setRandomLogos();
+                loadProducts();
+                showNotification('Products refreshed', 'success');
+            }, { passive: false });
             
             // Close FAB when clicking elsewhere
             document.addEventListener('click', (e) => {
@@ -3117,12 +3108,29 @@
             window.addEventListener('beforeunload', () => {
                 saveUserPreferences();
             });
+            
+            // Prevent pull-to-refresh on mobile
+            document.addEventListener('touchmove', (e) => {
+                if (isCartOpen || paymentModal.classList.contains('active') || contactModal.classList.contains('active')) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            // Fix for iOS Safari 100vh issue
+            function setVH() {
+                let vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            }
+            
+            setVH();
+            window.addEventListener('resize', setVH);
+            window.addEventListener('orientationchange', setVH);
         }
         
         // Initialize the app when DOM is loaded
         document.addEventListener('DOMContentLoaded', init);
         
-        // Service Worker registration (simplified inline version)
+        // Service Worker registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 const swContent = `
@@ -3132,7 +3140,10 @@
                                 return cache.addAll([
                                     '/',
                                     './',
-                                    'qr.png'
+                                    'qr.png',
+                                    'asj.png',
+                                    'asj1.png',
+                                    'asj2.png'
                                 ]);
                             })
                         );
